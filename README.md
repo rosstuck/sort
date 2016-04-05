@@ -81,4 +81,4 @@ $yourCustomCollection->usort($sortChain);
 ```
 
 ## Status
-Works, tested, still need to add non-functionals like docs and fancy README badges
+Works, tested, still need to add non-functionals like docs and fancy README badges.
