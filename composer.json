@@ -1,0 +1,19 @@
+{
+    "name": "tuck/sort",
+    "authors": [
+        {
+            "name": "Ross Tuck",
+            "email": "me@rosstuck.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Tuck\\Sort\\": "src/",
+            "Tuck\\Sort\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.2"
+    }
+}
