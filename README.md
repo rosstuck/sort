@@ -25,13 +25,13 @@ Sort::user(
 );
 ```
 
-Automatically converts iterators:
+Automatically converts iterators
 ```
 $x = new ArrayIterator([3, 4, 1, 2]);
 Sort::values($x); // returns [1, 2, 3, 4]
 ```
 
-No more "sort" vs "asort", or remembering that natsort preserves numeric indexes which breaks simple tests. All returned arrays are 0 indexed, unless they receive the PRESERVE_KEYS flag.
+No more `sort` vs `asort` or remembering to index your test fixtures when using `natsort`.
 
 ```
 Sort::values(['foo', 'bar', 'baz'], Sort::PRESERVE_KEYS);
@@ -44,12 +44,14 @@ Sort::user(
 ```
 
 Simplify the usort ```$a == $b ? 0 : (($a < $b) ? -1 : 1);``` mess in PHP 5
+
 ```
 use Tuck\Sort\Compare;
 
 Compare::loose(1, "1"); // uses ==
 Compare::strict(1, 1)   // uses ===
 
+// but seriously, upgrade to 7, spaceship operator is awesome
 ```
 
 Chain sorting methods
