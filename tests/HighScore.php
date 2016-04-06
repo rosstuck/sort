@@ -21,7 +21,7 @@ class HighScore
      */
     private $date;
 
-    public function __construct(string $name, int $score, DateTime $date)
+    public function __construct($name, $score, DateTime $date)
     {
         $this->name = $name;
         $this->score = $score;
