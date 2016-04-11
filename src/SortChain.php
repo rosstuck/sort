@@ -13,7 +13,7 @@ class SortChain
         $this->callables = $callables;
 
         if (static::$nullOperatorEquality === null) {
-            static::$nullOperatorEquality = version_compare(PHP_VERSION, '7.0.0', '>=') ? 0 : 1;
+            static::$nullOperatorEquality = version_compare(PHP_VERSION, '7.0.0', '>=') || defined('HHVM_VERSION')? 0 : 1;
         }
     }
 
