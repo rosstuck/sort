@@ -6,7 +6,7 @@ use ArrayIterator;
 use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
 
-class SorterTest extends \PHPUnit_Framework_TestCase
+class SortTest extends \PHPUnit_Framework_TestCase
 {
     public function testSortingByValues()
     {
