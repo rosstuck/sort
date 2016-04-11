@@ -16,7 +16,7 @@ Basic sorting functions
 ```
 use Tuck\Sort\Sort;
 
-Sort::values(['foo', 'bar', 'baz']);                    // returns ['foo', 'bar', 'baz']
+Sort::values(['foo', 'bar', 'baz']);                    // returns ['bar', 'baz', 'foo']
 Sort::keys(['x' => 'foo', 'm' => 'bar']);               // returns ['m' => 'bar', 'x' => 'foo']
 Sort::natural(['img12.jpg', 'img2.jpg', 'img1.jpg']);   // returns ['img1.jpg', 'img2.jpg', 'img12.jpg']
 Sort::user(
