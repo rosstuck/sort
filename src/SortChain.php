@@ -6,9 +6,15 @@ class SortChain
 {
     private $callables = [];
 
+    private static $nullOperatorEquality;
+
     public function __construct(array $callables)
     {
         $this->callables = $callables;
+
+        if (static::$nullOperatorEquality === null) {
+            static::$nullOperatorEquality = version_compare(PHP_VERSION, '7.0.0', '>=') ? 0 : 1;
+        }
     }
 
     public function compare(callable $callable)
@@ -42,6 +48,10 @@ class SortChain
 
     public function __invoke($a, $b)
     {
+        if (empty($this->callables)) {
+            return static::$nullOperatorEquality;
+        }
+
         foreach ($this->callables as $callable) {
             $result = $callable($a, $b);
 

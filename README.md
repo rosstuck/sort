@@ -208,7 +208,6 @@ $yourCustomCollection->usort($sortChain);
 
 ## Known issues
 
-- Sorting with an empty chain will return different values in PHP 5 vs PHP 7.
 - Need to investigate supporting native sort flags
 
 ## License
