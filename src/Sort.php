@@ -70,7 +70,7 @@ class Sort
             return iterator_to_array($list);
         }
 
-        throw new \InvalidArgumentException("Expected array or traversable object, received" . gettype($list));
+        throw new \InvalidArgumentException("Expected array or traversable object, received " . gettype($list));
     }
 
     public static function chain()

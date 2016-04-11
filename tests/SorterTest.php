@@ -57,6 +57,17 @@ class SorterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([1, 2, 3, 4, 5], Sort::values($x));
     }
 
+    public function testSortingGenerator()
+    {
+        $generator = function () {
+            yield 2;
+            yield 1;
+            yield 3;
+        };
+
+        $this->assertEquals([1, 2, 3], Sort::values($generator()));
+    }
+
     public function testSortingByCallback()
     {
         $x = ['derp', 'so', 'foods', 'dat'];
