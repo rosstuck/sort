@@ -206,10 +206,11 @@ This means you can use it with any custom collection class that supports usort:
 $yourCustomCollection->usort($sortChain);
 ```
 
-## Known issues
+## Roadmap
 
 - Need to investigate supporting native sort flags
 - Could add support for the "reverse" sorting functions to get some minor speedgains.
+- Standard functions instead of namespaced ones could be nice, will probably wait for function autoloading
 
 ## License
 
