@@ -209,6 +209,7 @@ $yourCustomCollection->usort($sortChain);
 ## Known issues
 
 - Need to investigate supporting native sort flags
+- Could add support for the "reverse" sorting functions to get some minor speedgains.
 
 ## License
 
