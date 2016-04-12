@@ -1,5 +1,8 @@
 {
     "name": "tuck/sort",
+    "description": "Syntactic sugar for PHP's sorting",
+    "keywords": ["sort", "sorting"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Ross Tuck",
@@ -9,13 +12,13 @@
     "require": {
         "php": ">=5.6"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^5.2"
+    },
     "autoload": {
         "psr-4": {
             "Tuck\\Sort\\": "src/",
             "Tuck\\Sort\\Tests\\": "tests/"
         }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.2"
     }
 }
