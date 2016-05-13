@@ -60,6 +60,16 @@ class Sort
         return $list;
     }
 
+    public static function by($list, callable $comparison)
+    {
+        return static::chain()->asc($comparison)->values($list);
+    }
+
+    public static function reversedBy($list, callable $comparison)
+    {
+        return static::chain()->desc($comparison)->values($list);
+    }
+
     private static function normalizeCollection($list)
     {
         if (is_array($list)) {

@@ -3,6 +3,7 @@
 namespace Tuck\Sort\Tests;
 
 use ArrayIterator;
+use DateTime;
 use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
 
@@ -95,6 +96,44 @@ class SortTest extends \PHPUnit_Framework_TestCase
             [1 => 'so', 3 => 'dat', 0 => 'derp', 2 => 'foods'],
             Sort::user($x, $comparison, Sort::PRESERVE_KEYS),
             true
+        );
+    }
+
+    public function testSortByShorthand()
+    {
+        $list = [
+            $aisha = new HighScore('Aisha', 3000, new DateTime('June 21, 2015')),
+            $ross = new HighScore('Ross', 1000, new DateTime('June 22, 2015')),
+            $steven = new HighScore('Steven', 2000, new DateTime('June 21, 2015')),
+        ];
+
+        $this->assertEquals(
+            [$ross, $steven, $aisha],
+            Sort::by(
+                $list,
+                function (HighScore $score) {
+                    return $score->getScore();
+                }
+            )
+        );
+    }
+
+    public function testSortReversedBy()
+    {
+        $list = [
+            $aisha = new HighScore('Aisha', 3000, new DateTime('June 21, 2015')),
+            $ross = new HighScore('Ross', 1000, new DateTime('June 22, 2015')),
+            $steven = new HighScore('Steven', 2000, new DateTime('June 21, 2015')),
+        ];
+
+        $this->assertEquals(
+            [$aisha, $steven, $ross],
+            Sort::reversedBy(
+                $list,
+                function (HighScore $score) {
+                    return $score->getScore();
+                }
+            )
         );
     }
 }
