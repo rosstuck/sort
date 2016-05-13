@@ -139,7 +139,7 @@ Sort::user($list, function (HighScore $a, HighScore $b) {
 });
 ```
 
-And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you can just specify the function to retrieve the data for both objects.
+And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you only specify how to retrieve the data from both objects.
 
 ```
 Sort::user($list, function (HighScore $a) {
