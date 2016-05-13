@@ -128,7 +128,24 @@ Compare::loose(1, "1"); // uses ==
 Compare::strict(1, 1)   // uses ===
 ```
 
-But seriously, upgrade to 7.
+But seriously, upgrade to 7 and use the spaceship operator instead.
+
+### PHP doesn't have a shorthand for sorting by fields
+When you're comparing a list of objects, you usually want to compare the same field on them repeatedly. Usually that means writing a usort function like this:
+
+```
+Sort::user($list, function (HighScore $a, HighScore $b) {
+    return $a->getPoints() <=> $b->getPoints();
+});
+```
+
+And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you can just specify the function to retrieve the data for both objects.
+
+```
+Sort::user($list, function (HighScore $a) {
+    return $a->getPoints();
+});
+```
 
 ### PHP doesn't have chained usort
 
