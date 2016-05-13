@@ -19,7 +19,7 @@ class SortChainTest extends \PHPUnit_Framework_TestCase
 
         $func = Sort::chain()
             ->desc(function (HighScore $score) {
-                return $score->getScore();
+                return $score->getPoints();
             })
             ->asc(function (HighScore $score) {
                 return $score->getDate();
@@ -54,7 +54,7 @@ class SortChainTest extends \PHPUnit_Framework_TestCase
 
         $func = Sort::chain()
             ->desc(function (HighScore $score) {
-                return $score->getScore();
+                return $score->getPoints();
             })
             ->asc(function (HighScore $score) {
                 return $score->getDate();

@@ -112,7 +112,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             Sort::by(
                 $list,
                 function (HighScore $score) {
-                    return $score->getScore();
+                    return $score->getPoints();
                 }
             )
         );
@@ -131,7 +131,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             Sort::reversedBy(
                 $list,
                 function (HighScore $score) {
-                    return $score->getScore();
+                    return $score->getPoints();
                 }
             )
         );

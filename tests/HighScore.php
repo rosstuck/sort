@@ -14,7 +14,7 @@ class HighScore
     /**
      * @var int
      */
-    private $score;
+    private $points;
 
     /**
      * @var DateTime
@@ -24,7 +24,7 @@ class HighScore
     public function __construct($name, $score, DateTime $date)
     {
         $this->name = $name;
-        $this->score = $score;
+        $this->points = $score;
         $this->date = $date;
     }
 
@@ -39,9 +39,9 @@ class HighScore
     /**
      * @return int
      */
-    public function getScore()
+    public function getPoints()
     {
-        return $this->score;
+        return $this->points;
     }
 
     /**
