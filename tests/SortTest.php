@@ -13,31 +13,72 @@ class SortTest extends \PHPUnit_Framework_TestCase
     {
         $list = [3, 2, 4, 1];
 
-        $this->assertEquals([1, 2, 3, 4], Sort::values($list));
-        $this->assertEquals([3, 2, 4, 1], $list, 'Original list should not have been modified');
+        $this->assertSame([1, 2, 3, 4], Sort::values($list));
+        $this->assertSame([3, 2, 4, 1], $list, 'Original list should not have been modified');
+    }
+
+    public function testSortingCaseSensitiveStringsWhenFlagIsDeliberatelySet()
+    {
+        $list = ['aria', 'Apple', 'Bear'];
+
+        $this->assertSame(
+            ['Apple', 'Bear', 'aria'],
+            Sort::values($list, Sort::DISCARD_KEYS, Sort::CASE_SENSITIVE)
+        );
+    }
+
+    public function testSortingCaseInsensitiveString()
+    {
+        $list = ['aria', 'Apple', 'Bear'];
+
+        $this->assertSame(
+            ['Apple', 'aria', 'Bear'],
+            Sort::values($list, Sort::DISCARD_KEYS, Sort::CASE_INSENSITIVE)
+        );
     }
 
     public function testPreservingKeysWhenSortingByValue()
     {
         $list = ['a' => 'raspberry', 'b' => 'blueberry', 'c' => 'lemon'];
 
-        $this->assertEquals(
+        $this->assertSame(
             ['b' => 'blueberry', 'c' => 'lemon', 'a' => 'raspberry'],
             Sort::values($list, Sort::PRESERVE_KEYS)
         );
     }
 
-    public function testKeys()
+
+    public function testSortingByKeys()
     {
         $list = ['c' => 'blat', 'a' => 'foo', 'b' => 'bar'];
 
-        $this->assertEquals(['a' => 'foo', 'b' => 'bar', 'c' => 'blat'], Sort::keys($list));
-        $this->assertEquals(['c' => 'blat', 'a' => 'foo', 'b' => 'bar'], $list, 'Original list should not have been modified');
+        $this->assertSame(['a' => 'foo', 'b' => 'bar', 'c' => 'blat'], Sort::keys($list));
+        $this->assertSame(['c' => 'blat', 'a' => 'foo', 'b' => 'bar'], $list, 'Original list should not have been modified');
+    }
+
+    public function testSortingKeysWithCaseSensitiveFlag()
+    {
+        $list = ['aria' => 1, 'Apple' => 1, 'Bear' => 1];
+
+        $this->assertSame(
+            ['Apple' => 1, 'Bear' => 1, 'aria' => 1],
+            Sort::keys($list, Sort::CASE_SENSITIVE)
+        );
+    }
+
+    public function testSortingKeysCaseInsensitively()
+    {
+        $list = ['aria' => 1, 'Apple' => 1, 'Bear' => 1];
+
+        $this->assertSame(
+            ['Apple' => 1, 'aria' => 1, 'Bear' => 1],
+            Sort::keys($list, Sort::CASE_INSENSITIVE)
+        );
     }
 
     public function testNaturalSorting()
     {
-        $this->assertEquals(
+        $this->assertSame(
             ["img1.png", "img2.png", "img10.png", "img12.png"],
             Sort::natural(["img12.png", "img10.png", "img2.png", "img1.png"])
         );
@@ -45,17 +86,33 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
     public function testPreservingKeysWithNaturalSorting()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [3 => "img1.png", 2 => "img2.png", 1 => "img10.png", 0 => "img12.png"],
             Sort::natural(["img12.png", "img10.png", "img2.png", "img1.png"], Sort::PRESERVE_KEYS)
         );
     }
 
+    public function testNaturalSortWithCaseSensitiveFlag()
+    {
+        $this->assertSame(
+            ["Img2.png", "Img12.png", "img1.png", "img10.png"],
+            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Sort::DISCARD_KEYS, Sort::CASE_SENSITIVE)
+        );
+    }
+
+    public function testNaturalSortWithCaseInsensitiveFlag()
+    {
+        $this->assertSame(
+            ["img1.png", "Img2.png", "img10.png", "Img12.png"],
+            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Sort::DISCARD_KEYS, Sort::CASE_INSENSITIVE)
+        );
+    }
+    
     public function testSortingCollection()
     {
         $x = new ArrayIterator([3, 2, 5, 1, 4]);
 
-        $this->assertEquals([1, 2, 3, 4, 5], Sort::values($x));
+        $this->assertSame([1, 2, 3, 4, 5], Sort::values($x));
     }
 
     public function testSortingGenerator()
@@ -66,7 +123,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             yield 3;
         };
 
-        $this->assertEquals([1, 2, 3], Sort::values($generator()));
+        $this->assertSame([1, 2, 3], Sort::values($generator()));
     }
 
     public function testSortingByCallback()
@@ -77,7 +134,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             return Compare::loose(strlen($a), strlen($b));
         };
 
-        $this->assertEquals(
+        $this->assertSame(
             ['so', 'dat', 'derp', 'foods'],
             Sort::user($x, $comparison),
             true
@@ -92,7 +149,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             return Compare::loose(strlen($a), strlen($b));
         };
 
-        $this->assertEquals(
+        $this->assertSame(
             [1 => 'so', 3 => 'dat', 0 => 'derp', 2 => 'foods'],
             Sort::user($x, $comparison, Sort::PRESERVE_KEYS),
             true
@@ -107,7 +164,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             $steven = new HighScore('Steven', 2000, new DateTime('June 21, 2015')),
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             [$ross, $steven, $aisha],
             Sort::by(
                 $list,
@@ -126,7 +183,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
             $steven = new HighScore('Steven', 2000, new DateTime('June 21, 2015')),
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             [$aisha, $steven, $ross],
             Sort::reversedBy(
                 $list,

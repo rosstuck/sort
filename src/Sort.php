@@ -7,31 +7,42 @@ class Sort
     const PRESERVE_KEYS = true;
     const DISCARD_KEYS = false;
 
-    public static function values($list, $preserveKeys = false)
+    const CASE_SENSITIVE = true;
+    const CASE_INSENSITIVE = false;
+
+    public static function values($list, $preserveKeys = false, $caseSensitive = true)
     {
         $list = static::normalizeCollection($list);
+        $flags = static::normalizeFlags($caseSensitive);
 
         if ($preserveKeys) {
-            asort($list);
+            asort($list, $flags);
         } else {
-            sort($list);
+            sort($list, $flags);
         }
 
         return $list;
     }
 
-    public static function keys($list)
+    public static function keys($list, $caseSensitive = true)
     {
         $list = static::normalizeCollection($list);
-        ksort($list);
+        $flags = static::normalizeFlags($caseSensitive);
+
+        ksort($list, $flags);
 
         return $list;
     }
 
-    public static function natural($list, $preserveKeys = false)
+    public static function natural($list, $preserveKeys = false, $caseSensitive = true)
     {
         $list = static::normalizeCollection($list);
-        natsort($list);
+
+        if ($caseSensitive) {
+            natsort($list);
+        } else {
+            natcasesort($list);
+        }
 
         if (!$preserveKeys) {
             $list = array_values($list);
@@ -81,6 +92,16 @@ class Sort
         }
 
         throw new \InvalidArgumentException("Expected array or traversable object, received " . gettype($list));
+    }
+
+    private function normalizeFlags($caseSensitive)
+    {
+        $flag = SORT_REGULAR;
+        if ($caseSensitive === static::CASE_INSENSITIVE) {
+            $flag = SORT_STRING | SORT_FLAG_CASE;
+        }
+
+        return $flag;
     }
 
     public static function chain()
