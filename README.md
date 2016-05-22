@@ -6,7 +6,7 @@ Syntactic sugar for PHP's built in sorting.
 
 Basic sorting functions
 
-```
+```php
 use Tuck\Sort\Sort;
 
 Sort::values(['foo', 'bar', 'baz']);                    // returns ['bar', 'baz', 'foo']
@@ -25,14 +25,14 @@ This library tries to smooth out the built-in API, specifically the following is
 
 If you want to sort the result of a method, you need to assign it to an intermediate variable.
 
-```
+```php
 $results = $metrics->getTotals();
 sort($results);
 ```
 
 With this library, you can pass results directly:
 
-```
+```php
 Sort::values($metrics->getTotals());
 ```
 
@@ -41,7 +41,7 @@ Perhaps you'd prefer sort to return a modified list, rather than mutating the or
 
 With this library, the results are returned directly and the original list is not modified:
 
-```
+```php
 $x = [3, 1, 2];
 
 var_dump(Sort::values($x)); // 1, 2, 3
@@ -51,7 +51,7 @@ var_dump($x);               // 3, 1, 2
 ### PHP's naming is confusing
 PHP's sorting functions don't always have the most intuitive names:
 
-```
+```php
 asort()
 sort()
 ksort()
@@ -63,7 +63,7 @@ uksort()
 
 With this library, naming reads a little better:
 
-```
+```php
 Sort::values()
 Sort::keys()
 Sort::natural()
@@ -75,20 +75,20 @@ When you use ```sort()``` PHP discards the original keys. Unless you use ```asor
 
 With this library, the returned keys are reset to sequential numbers, regardless of the type of sorting.
 
-```
+```php
 Sort::values([3 => 'bob', 1 => 'alice']);
 // returns [0 => 'alice', 1 => 'bob']
 ```
 
 If you'd like to keep the original keys, there's a consistent parameter you can always use ```Sort::PRESERVE_KEYS```. This selects the correct key-preserving function under the hood, so you don't have to remember it.
 
-```
+```php
 Sort::values([3 => 'bob', 1 => 'alice'], Sort::PRESERVE_KEYS);
 // returns [1 => 'alice', 3 => 'bob']
 ```
 
 This works for all sort functions:
-```
+```php
 Sort::values(['foo', 'bar', 'baz'], Sort::PRESERVE_KEYS);
 Sort::natural(['foo', 'bar', 'baz'], Sort::PRESERVE_KEYS);
 Sort::user(
@@ -106,7 +106,7 @@ Built-in sorting functions work great on arrays but won't accept their Traversab
 
 With this library, iterators and generators are automatically converted to arrays.
 
-```
+```php
 $x = new ArrayIterator([3, 1, 2]);
 Sort::values($x); // returns [1, 2, 3]
 ```
@@ -121,7 +121,7 @@ PHP 7 vastly improves this with the spaceship operator ```$a <=> $b``` but perha
 
 Both options are built into the library:
 
-```
+```php
 use Tuck\Sort\Compare;
 
 Compare::loose(1, "1"); // uses ==
@@ -133,7 +133,7 @@ But seriously, upgrade to 7 and use the spaceship operator instead.
 ### PHP doesn't have a shorthand for sorting by fields
 When you're comparing a list of objects, you usually want to compare the same field on them repeatedly. Usually that means writing a usort function like this:
 
-```
+```php
 Sort::user($list, function (HighScore $a, HighScore $b) {
     return $a->getPoints() <=> $b->getPoints();
 });
@@ -141,7 +141,7 @@ Sort::user($list, function (HighScore $a, HighScore $b) {
 
 And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you only specify how to retrieve the data from both objects.
 
-```
+```php
 Sort::user($list, function (HighScore $a) {
     return $a->getPoints();
 });
@@ -151,7 +151,7 @@ Sort::user($list, function (HighScore $a) {
 
 There's no elegant syntax for chaining multiple sorts at once. If you wanted to sort a list of high scores, first by points, then name, then date, you'd need to write a function like:
 
-```
+```php
 usort(
     $unsorted,
     function (HighScore $scoreA, HighScore $scoreB) {
@@ -175,7 +175,7 @@ usort(
 
 With this library, you can chain sorts like so:
 
-```
+```php
 Sort::chain()
     ->compare(function (HighScore $a, HighScore $b) {
         return $a->getPoints() <=> $b->getPoints();
@@ -190,7 +190,7 @@ Sort::chain()
 
 In most cases, you'll want to extract the same information from ```$a``` and ```$b``` at the same time. You might also want to sort them as ascending or descending on different factors. For both of these use cases, you can use the ```asc()``` and ```desc()``` methods.
 
-```
+```php
 $sortChain = Sort::chain()
     ->desc(function (HighScore $score) {
         return $score->getPoints();
@@ -206,7 +206,7 @@ $sortChain = Sort::chain()
 
 Once you've created your sorting chain, you can apply it to keys or values. Features like Iterator support, returned values, and PRESERVE_KEY flag are all supported are all supported.
 
-```
+```php
 $sortChain->values(['foo', 'bar']);
 $sortChain->values(['foo', 'bar'], Sort::PRESERVE_KEYS);
 $sortChain->keys(['foo' => 'blah', 'bar' => 'blat']);
@@ -214,12 +214,12 @@ $sortChain->keys(['foo' => 'blah', 'bar' => 'blat']);
 
 You can also use the chain itself the comparison function:
 
-```
+```php
 $sortChain('steven', 'connie'); // returns -1, 0 or 1
 ```
 
 This means you can use it with any custom collection class that supports usort:
-```
+```php
 $yourCustomCollection->usort($sortChain);
 ```
 
