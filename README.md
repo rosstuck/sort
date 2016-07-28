@@ -71,7 +71,7 @@ Sort::user()
 ```
 
 ### PHP doesn't handle keys consistently
-When you use ```sort()``` PHP discards the original keys. Unless you use ```asort()```. With ```natsort``` and ```natcasesort```, however, the original keys are preserved. You get the idea.
+When you use ```sort()``` PHP discards the original keys. Unless you use ```asort()```. Or ```natsort``` and ```natcasesort``` which always preserve the original keys. You get the idea.
 
 With this library, the returned keys are reset to sequential numbers, regardless of the type of sorting.
 
@@ -139,7 +139,7 @@ Sort::user($list, function (HighScore $a, HighScore $b) {
 });
 ```
 
-And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you only specify how to retrieve the data from both objects.
+And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you only specify how to retrieve the sortable data from an element.
 
 ```
 Sort::user($list, function (HighScore $a) {
@@ -212,7 +212,7 @@ $sortChain->values(['foo', 'bar'], Sort::PRESERVE_KEYS);
 $sortChain->keys(['foo' => 'blah', 'bar' => 'blat']);
 ```
 
-You can also use the chain itself the comparison function:
+You can also invoke the chain itself as a comparison function:
 
 ```
 $sortChain('steven', 'connie'); // returns -1, 0 or 1
@@ -222,6 +222,20 @@ This means you can use it with any custom collection class that supports usort:
 ```
 $yourCustomCollection->usort($sortChain);
 ```
+
+When building your sort chain, you don't have to compose all the sorting functions at once. You can attach them over time or conditionally:
+
+```
+$sortOrder = Sort::chain();
+
+if ($options['sort_by_name']) {
+   $sortOrder->asc(...);
+}
+
+// etc
+```
+
+However, if use the chain before any sorts are added, then the order is essentially random and decided by your PHP runtime (PHP 5.x vs PHP 7 vs HHVM). There's no easy way to normalize this (I've tried) but it varies based on the runtime, the number of elements in the array, the sorting algorithm used, etc. The good news is it doesn't matter if the elements are random because there was nothing worth sorting by anyways! :)
 
 ## Roadmap
 

@@ -94,18 +94,18 @@ class SortChainTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAnEmptyMethodCausesNoReordering()
+    public function testAnEmptyMethodPassesButPromisesNoOrder()
     {
-        $unsorted = [
+        $sorted = Sort::chain()->values([
             $aisha = new HighScore('Aisha', 3000, new DateTime('June 21, 2015')),
             $ross = new HighScore('Ross', 1000, new DateTime('June 22, 2015')),
             $steven = new HighScore('Steven', 2000, new DateTime('June 21, 2015')),
-        ];
+        ]);
 
-        $this->assertEquals(
-            [$aisha, $ross, $steven],
-            Sort::chain()->values($unsorted)
-        );
+        $this->assertCount(3, $sorted);
+        $this->assertContains($aisha, $sorted);
+        $this->assertContains($steven, $sorted);
+        $this->assertContains($ross, $sorted);
     }
 
     public function testMainlyHomogeneousSetWithEmptyChain()
