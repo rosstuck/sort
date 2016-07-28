@@ -175,7 +175,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSortReversedBy()
+    public function testSortByDescending()
     {
         $list = [
             $aisha = new HighScore('Aisha', 3000, new DateTime('June 21, 2015')),
@@ -185,7 +185,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [$aisha, $steven, $ross],
-            Sort::reversedBy(
+            Sort::byDescending(
                 $list,
                 function (HighScore $score) {
                     return $score->getPoints();

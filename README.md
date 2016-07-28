@@ -142,7 +142,15 @@ Sort::user($list, function (HighScore $a, HighScore $b) {
 And that's with the PHP 7 shorthand operator helping. This library offers a slightly shorter, Scala inspired version where you only specify how to retrieve the sortable data from an element.
 
 ```
-Sort::user($list, function (HighScore $a) {
+Sort::by($list, function (HighScore $a) {
+    return $a->getPoints();
+});
+```
+
+This also works in reverse:
+
+```
+Sort::byDescending($list, function (HighScore $a) {
     return $a->getPoints();
 });
 ```

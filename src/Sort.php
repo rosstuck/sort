@@ -76,7 +76,7 @@ class Sort
         return static::chain()->asc($comparison)->values($list);
     }
 
-    public static function reversedBy($list, callable $comparison)
+    public static function byDescending($list, callable $comparison)
     {
         return static::chain()->desc($comparison)->values($list);
     }
