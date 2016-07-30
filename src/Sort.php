@@ -94,7 +94,7 @@ class Sort
         throw new \InvalidArgumentException("Expected array or traversable object, received " . gettype($list));
     }
 
-    private function normalizeFlags($caseSensitive)
+    private static function normalizeFlags($caseSensitive)
     {
         $flag = SORT_REGULAR;
         if ($caseSensitive === static::CASE_INSENSITIVE) {
