@@ -2,71 +2,99 @@
 
 namespace Tuck\Sort;
 
+use Tuck\Sort\Options\Casing;
+use Tuck\Sort\Options\Keys;
+use Tuck\Sort\Options\Options;
+use Tuck\Sort\Options\Order;
+
 class Sort
 {
-    const PRESERVE_KEYS = true;
-    const DISCARD_KEYS = false;
-
-    const CASE_SENSITIVE = true;
-    const CASE_INSENSITIVE = false;
-
-    public static function values($list, $preserveKeys = false, $caseSensitive = true)
+    public static function values($list, ...$options)
     {
         $list = static::normalizeCollection($list);
-        $flags = static::normalizeFlags($caseSensitive);
+        $options = new Options($options, [Keys::class, Casing::class, Order::class]);
+        $flags = $options->asFlags();
 
-        if ($preserveKeys) {
-            asort($list, $flags);
+        if ($options->keys()->arePreserved()) {
+            if ($options->order()->isAscending()) {
+                asort($list, $flags);
+            } else {
+                arsort($list, $flags);
+            }
         } else {
-            sort($list, $flags);
+            if ($options->order()->isAscending()) {
+                sort($list, $flags);
+            } else {
+                rsort($list, $flags);
+            }
         }
 
         return $list;
     }
 
-    public static function keys($list, $caseSensitive = true)
+    public static function keys($list, ...$options)
     {
         $list = static::normalizeCollection($list);
-        $flags = static::normalizeFlags($caseSensitive);
+        $options = new Options($options, [Casing::class, Order::class]);
 
-        ksort($list, $flags);
+        if ($options->order()->isAscending()) {
+            ksort($list, $options->asFlags());
+        } else {
+            krsort($list, $options->asFlags());
+        }
 
         return $list;
     }
 
-    public static function natural($list, $preserveKeys = false, $caseSensitive = true)
+    public static function natural($list, ...$options)
     {
         $list = static::normalizeCollection($list);
+        $options = new Options($options, [Casing::class, Keys::class, Order::class]);
 
-        if ($caseSensitive) {
+        if ($options->casing()->isSensitive()) {
             natsort($list);
         } else {
             natcasesort($list);
         }
 
-        if (!$preserveKeys) {
+        if (!$options->order()->isAscending()) {
+            $list = array_reverse($list, true);
+        }
+
+        if (!$options->keys()->arePreserved()) {
             $list = array_values($list);
         }
         return $list;
     }
 
-    public static function user($list, callable $comparison, $preserveKeys = false)
+    public static function user($list, callable $comparison, ...$options)
     {
         $list = static::normalizeCollection($list);
+        $options = new Options($options, [Keys::class, Order::class]);
 
-        if ($preserveKeys) {
+        if ($options->keys()->arePreserved()) {
             uasort($list, $comparison);
         } else {
             usort($list, $comparison);
         }
 
+        if ($options->order()->isDescending()) {
+            $list = array_reverse($list, $options->keys()->arePreserved());
+        }
+
         return $list;
     }
 
-    public static function userKeys($list, callable $comparison)
+    public static function userKeys($list, callable $comparison, ...$options)
     {
         $list = static::normalizeCollection($list);
+        $options = new Options($options, [Order::class]);
+
         uksort($list, $comparison);
+
+        if ($options->order()->isDescending()) {
+            $list = array_reverse($list, true);
+        }
 
         return $list;
     }
@@ -92,16 +120,6 @@ class Sort
         }
 
         throw new \InvalidArgumentException("Expected array or traversable object, received " . gettype($list));
-    }
-
-    private static function normalizeFlags($caseSensitive)
-    {
-        $flag = SORT_REGULAR;
-        if ($caseSensitive === static::CASE_INSENSITIVE) {
-            $flag = SORT_STRING | SORT_FLAG_CASE;
-        }
-
-        return $flag;
     }
 
     public static function chain()

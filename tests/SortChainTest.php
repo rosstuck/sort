@@ -5,6 +5,7 @@ namespace Tuck\Sort\Tests;
 use DateTime;
 use ArrayObject;
 use Tuck\Sort\Compare;
+use Tuck\Sort\Options\Keys;
 use Tuck\Sort\Sort;
 
 class SortChainTest extends \PHPUnit_Framework_TestCase
@@ -40,8 +41,8 @@ class SortChainTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->assertEquals(['blueberry', 'orange'], $chain->values($unsorted));
-        $this->assertEquals(['blueberry', 'orange'], $chain->values($unsorted, Sort::DISCARD_KEYS));
-        $this->assertEquals(['berry' => 'blueberry', 'citrus' => 'orange'], $chain->values($unsorted, Sort::PRESERVE_KEYS));
+        $this->assertEquals(['blueberry', 'orange'], $chain->values($unsorted, Keys::discard()));
+        $this->assertEquals(['berry' => 'blueberry', 'citrus' => 'orange'], $chain->values($unsorted, Keys::preserve()));
     }
 
     public function testApplyingToACustomCollection()

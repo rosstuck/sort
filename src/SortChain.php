@@ -30,9 +30,9 @@ class SortChain
         );
     }
 
-    public function values($collection, $preserveKeys = Sort::DISCARD_KEYS)
+    public function values($collection, ...$options)
     {
-        return Sort::user($collection, $this, $preserveKeys);
+        return call_user_func_array([Sort::class, 'user'], array_merge([$collection, $this], $options));
     }
 
     public function keys($collection)
@@ -64,7 +64,7 @@ class SortChain
         };
     }
 
-    public function reverse(callable $callable)
+    private function reverse(callable $callable)
     {
         return function ($a, $b) use ($callable) {
             return $callable($a, $b) * (-1);

@@ -6,6 +6,9 @@ use ArrayIterator;
 use DateTime;
 use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
+use Tuck\Sort\Options\Casing;
+use Tuck\Sort\Options\Keys;
+use Tuck\Sort\Options\Order;
 
 class SortTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,13 +20,28 @@ class SortTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([3, 2, 4, 1], $list, 'Original list should not have been modified');
     }
 
+    public function testSortingByDescendingValues()
+    {
+        $list = [3, 2, 4, 1];
+        $this->assertSame([4, 3, 2, 1], Sort::values($list, Order::descending()));
+    }
+
+    public function testSortingByDescendingValuesWhilePreservingKeys()
+    {
+        $list = [1 => 'apple', 2 => 'cat'];
+        $this->assertSame(
+            [2 => 'cat', 1 => 'apple'],
+            Sort::values($list, Order::descending(), Keys::preserve())
+        );
+    }
+
     public function testSortingCaseSensitiveStringsWhenFlagIsDeliberatelySet()
     {
         $list = ['aria', 'Apple', 'Bear'];
 
         $this->assertSame(
             ['Apple', 'Bear', 'aria'],
-            Sort::values($list, Sort::DISCARD_KEYS, Sort::CASE_SENSITIVE)
+            Sort::values($list, Keys::discard(), Casing::sensitive())
         );
     }
 
@@ -33,7 +51,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             ['Apple', 'aria', 'Bear'],
-            Sort::values($list, Sort::DISCARD_KEYS, Sort::CASE_INSENSITIVE)
+            Sort::values($list, Keys::discard(), Casing::insensitive())
         );
     }
 
@@ -43,10 +61,9 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             ['b' => 'blueberry', 'c' => 'lemon', 'a' => 'raspberry'],
-            Sort::values($list, Sort::PRESERVE_KEYS)
+            Sort::values($list, Keys::preserve())
         );
     }
-
 
     public function testSortingByKeys()
     {
@@ -62,7 +79,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             ['Apple' => 1, 'Bear' => 1, 'aria' => 1],
-            Sort::keys($list, Sort::CASE_SENSITIVE)
+            Sort::keys($list, Casing::sensitive())
         );
     }
 
@@ -72,7 +89,17 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             ['Apple' => 1, 'aria' => 1, 'Bear' => 1],
-            Sort::keys($list, Sort::CASE_INSENSITIVE)
+            Sort::keys($list, Casing::insensitive())
+        );
+    }
+
+    public function testSortingByKeysDescending()
+    {
+        $list = ['Cat' => 1, 'Apple' => 2, 'Bear' => 3];
+
+        $this->assertSame(
+            ['Cat' => 1, 'Bear' => 3, 'Apple' => 2],
+            Sort::keys($list, Order::descending())
         );
     }
 
@@ -88,7 +115,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [3 => "img1.png", 2 => "img2.png", 1 => "img10.png", 0 => "img12.png"],
-            Sort::natural(["img12.png", "img10.png", "img2.png", "img1.png"], Sort::PRESERVE_KEYS)
+            Sort::natural(["img12.png", "img10.png", "img2.png", "img1.png"], Keys::preserve())
         );
     }
 
@@ -96,7 +123,7 @@ class SortTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             ["Img2.png", "Img12.png", "img1.png", "img10.png"],
-            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Sort::DISCARD_KEYS, Sort::CASE_SENSITIVE)
+            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Keys::discard(), Casing::sensitive())
         );
     }
 
@@ -104,7 +131,23 @@ class SortTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             ["img1.png", "Img2.png", "img10.png", "Img12.png"],
-            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Sort::DISCARD_KEYS, Sort::CASE_INSENSITIVE)
+            Sort::natural(["Img12.png", "img10.png", "Img2.png", "img1.png"], Keys::discard(), Casing::insensitive())
+        );
+    }
+
+    public function testNaturalSortingDescending()
+    {
+        $this->assertSame(
+            ["img12.png", "img10.png", "img2.png", "img1.png"],
+            Sort::natural(["img12.png", "img1.png", "img2.png", "img10.png"], Order::descending())
+        );
+    }
+
+    public function testNaturalSortingDescendingAndPreservingKeys()
+    {
+        $this->assertSame(
+            [0 => "img12.png", 3 => "img10.png", 2 => "img2.png", 1 => "img1.png"],
+            Sort::natural(["img12.png", "img1.png", "img2.png", "img10.png"], Order::descending(), Keys::preserve())
         );
     }
     
@@ -136,8 +179,35 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             ['so', 'dat', 'derp', 'foods'],
-            Sort::user($x, $comparison),
-            true
+            Sort::user($x, $comparison)
+        );
+    }
+
+    public function testDescendingOrderWhenSortingByCallback()
+    {
+        $x = ['derp', 'so', 'foods', 'dat'];
+
+        $comparison = function ($a, $b) {
+            return Compare::loose(strlen($a), strlen($b));
+        };
+
+        $this->assertSame(
+            ['foods', 'derp', 'dat', 'so'],
+            Sort::user($x, $comparison, Order::descending())
+        );
+    }
+
+    public function testDescendingAndPreservingKeysWhenSortingByCallback()
+    {
+        $x = ['derp', 'so', 'foods', 'dat'];
+
+        $comparison = function ($a, $b) {
+            return Compare::loose(strlen($a), strlen($b));
+        };
+
+        $this->assertSame(
+            [2 => 'foods', 0 => 'derp', 3 => 'dat', 1 => 'so'],
+            Sort::user($x, $comparison, Order::descending(), Keys::preserve())
         );
     }
 
@@ -151,8 +221,35 @@ class SortTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [1 => 'so', 3 => 'dat', 0 => 'derp', 2 => 'foods'],
-            Sort::user($x, $comparison, Sort::PRESERVE_KEYS),
-            true
+            Sort::user($x, $comparison, Keys::preserve())
+        );
+    }
+
+    public function testSortingByKeysUsingCallback()
+    {
+        $x = ['derp' => 1, 'so' => 2, 'foods' => 3, 'dat' => 4];
+
+        $comparison = function ($a, $b) {
+            return Compare::loose(strlen($a), strlen($b));
+        };
+
+        $this->assertSame(
+            ['so' => 2, 'dat' => 4, 'derp' => 1, 'foods' => 3],
+            Sort::userKeys($x, $comparison)
+        );
+    }
+
+    public function testSortKeysDescendingUsingCallback()
+    {
+        $x = ['derp' => 1, 'so' => 2, 'foods' => 3, 'dat' => 4];
+
+        $comparison = function ($a, $b) {
+            return Compare::loose(strlen($a), strlen($b));
+        };
+
+        $this->assertSame(
+            ['foods' => 3, 'derp' => 1, 'dat' => 4, 'so' => 2],
+            Sort::userKeys($x, $comparison, Order::descending())
         );
     }
 
