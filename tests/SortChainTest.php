@@ -107,12 +107,4 @@ class SortChainTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($steven, $sorted);
         $this->assertContains($ross, $sorted);
     }
-
-    public function testMainlyHomogeneousSetWithEmptyChain()
-    {
-        $this->assertEquals(
-            [1, 2, 1, 1, 1],
-            Sort::chain()->values([1, 2, 1, 1, 1])
-        );
-    }
 }
