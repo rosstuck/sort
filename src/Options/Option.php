@@ -7,5 +7,5 @@ interface Option
 {
     public function buildFlags($flags);
 
-    public static function defaultOption();
+    public static function defaultSetting();
 }

@@ -29,7 +29,7 @@ class Keys implements Option
     
     public function areDiscarded()
     {
-        return $this->preserve;
+        return !$this->preserve;
     }
 
     public function buildFlags($flags)
@@ -37,7 +37,7 @@ class Keys implements Option
         return $flags;
     }
 
-    public static function defaultOption()
+    public static function defaultSetting()
     {
         return static::discard();
     }

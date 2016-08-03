@@ -24,12 +24,16 @@ class Casing implements Option
 
     public function buildFlags($flags)
     {
-        $flag = SORT_REGULAR;
-        if ($this->sensitive === false) {
-            $flag = SORT_STRING | SORT_FLAG_CASE;
+        if ($this->sensitive === true) {
+            return $flags;
         }
 
-        return $flag;
+        if (!($flags & SORT_NATURAL)) {
+            $flags |= SORT_STRING;
+        }
+
+        $flags |= SORT_FLAG_CASE;
+        return $flags;
     }
 
     public function isSensitive()
@@ -37,7 +41,17 @@ class Casing implements Option
         return $this->sensitive;
     }
 
-    public static function defaultOption()
+    public function isInsensitive()
+    {
+        return !$this->sensitive;
+    }
+
+    public function isJerk()
+    {
+        return !$this->sensitive;
+    }
+
+    public static function defaultSetting()
     {
         return static::sensitive();
     }

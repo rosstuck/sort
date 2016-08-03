@@ -37,7 +37,7 @@ class Order implements Option
         return $flags;
     }
 
-    public static function defaultOption()
+    public static function defaultSetting()
     {
         return static::ascending();
     }

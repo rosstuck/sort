@@ -3,24 +3,32 @@ declare(strict_types = 1);
 
 namespace Tuck\Sort\Options;
 
+use Tuck\Sort\Options\Exception\NotAnOption;
+use Tuck\Sort\Options\Exception\OptionSetMultipleTimes;
+use Tuck\Sort\Options\Exception\UnsupportedOption;
+
 class Options
 {
     private $options = [];
 
-    public function __construct(array $userProvidedOptions, array $supportedOptionTypes)
+    public function __construct(array $userProvidedOptions, array $supportedUserOptionTypes)
     {
         foreach ($userProvidedOptions as $userOption) {
+            if (!$userOption instanceof Option) {
+                throw NotAnOption::givenItem($userOption);
+            }
+
             $optionType = get_class($userOption);
             if (isset($this->options[$optionType])) {
-                throw new \Exception("Duplicate option of type $optionType given");
+                throw OptionSetMultipleTimes::ofType($optionType);
             }
 
             $this->options[$optionType] = $userOption;
         }
 
-        $unallowedTypes = array_diff(array_keys($this->options), $supportedOptionTypes);
+        $unallowedTypes = array_diff(array_keys($this->options), $supportedUserOptionTypes);
         if (count($unallowedTypes) > 0) {
-            throw new \Exception("The following options are not supported with this type of sort: " . implode($unallowedTypes));
+            throw UnsupportedOption::multipleTypes($unallowedTypes);
         }
     }
 
@@ -69,6 +77,6 @@ class Options
             return $this->options[$className];
         }
 
-        return $this->options[$className] = $className::defaultOption();
+        return $this->options[$className] = $className::defaultSetting();
     }
 }
