@@ -1,5 +1,9 @@
 # Tuck\Sort
-![Badge](https://travis-ci.org/rosstuck/sort.svg?branch=master)
+
+[![Build Status](https://travis-ci.org/rosstuck/sort.svg?branch=master)](https://travis-ci.org/rosstuck/sort)
+[![Latest Stable Version](https://poser.pugx.org/tuck/sort/v/stable.png)](https://packagist.org/packages/WyriHaximus/react-http-middleware-session)
+[![Total Downloads](https://poser.pugx.org/tuck/sort/downloads.png)](https://packagist.org/packages/tuck/sort)
+[![License](https://poser.pugx.org/tuck/sort/license.png)](https://packagist.org/packages/WyriHaximus/react-http-middleware-session)
 
 Syntactic sugar for PHP's built in sorting.
 
