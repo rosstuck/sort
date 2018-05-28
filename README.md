@@ -113,23 +113,6 @@ Sort::values($x); // returns [1, 2, 3]
 
 Note this library always returns arrays, even when given a custom collection. If you'd like your custom collection to support this library, see the usort documentation below.
 
-### PHP ~~doesn't~~ didn't have comparison operators
-
-When [defining a custom sorting function](http://php.net/usort), you need to return a -1, 0 or 1. This usually ends up some awful looking mess like ```$a == $b ? 0 : (($a < $b) ? -1 : 1);```.
-
-PHP 7 vastly improves this with the spaceship operator ```$a <=> $b``` but perhaps you're stuck on PHP 5.x or want strict equality comparison for objects (spaceship is loose by default).
-
-Both options are built into the library:
-
-```php
-use Tuck\Sort\Compare;
-
-Compare::loose(1, "1"); // uses ==
-Compare::strict(1, 1)   // uses ===
-```
-
-But seriously, upgrade to 7 and use the spaceship operator instead.
-
 ### PHP doesn't have a shorthand for sorting by fields
 When you're comparing a list of objects, you usually want to compare the same field on them repeatedly. Usually that means writing a usort function like this:
 
