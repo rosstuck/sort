@@ -6,8 +6,9 @@ use ArrayIterator;
 use DateTime;
 use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
+use PHPUnit\Framework\TestCase;
 
-class SortTest extends \PHPUnit_Framework_TestCase
+class SortTest extends TestCase
 {
     public function testSortingByValues()
     {

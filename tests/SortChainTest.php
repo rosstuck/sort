@@ -6,8 +6,9 @@ use DateTime;
 use ArrayObject;
 use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
+use PHPUnit\Framework\TestCase;
 
-class SortChainTest extends \PHPUnit_Framework_TestCase
+class SortChainTest extends TestCase
 {
     public function testSortingChain()
     {

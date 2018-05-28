@@ -4,8 +4,9 @@ namespace Tuck\Sort\Tests;
 
 use DateTimeImmutable;
 use Tuck\Sort\Compare;
+use PHPUnit\Framework\TestCase;
 
-class CompareTest extends \PHPUnit_Framework_TestCase
+class CompareTest extends TestCase
 {
     public function testLooselyComparingValues()
     {
