@@ -4,7 +4,6 @@ namespace Tuck\Sort\Tests;
 
 use DateTime;
 use ArrayObject;
-use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +36,7 @@ class SortChainTest extends TestCase
         $unsorted = ['citrus' => 'orange', 'berry' => 'blueberry'];
 
         $chain = Sort::chain()->compare(function($a, $b) {
-            return Compare::loose($a, $b);
+            return $a <=> $b;
         });
 
         $this->assertEquals(['blueberry', 'orange'], $chain->values($unsorted));
@@ -82,10 +81,10 @@ class SortChainTest extends TestCase
 
         $sorted = Sort::chain()
             ->compare(function (HighScore $a, HighScore $b) {
-                return Compare::loose($a->getDate(), $b->getDate());
+                return $a->getDate() <=> $b->getDate();
             })
             ->compare(function (HighScore $a, HighScore $b) {
-                return Compare::loose($a->getName(), $b->getName());
+                return $a->getName() <=> $b->getName();
             })
             ->values($unsorted);
 

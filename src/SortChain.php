@@ -60,7 +60,7 @@ class SortChain
     private function singleToComparison(callable $callable)
     {
         return function ($a, $b) use ($callable) {
-            return Compare::loose($callable($a), $callable($b));
+            return $callable($a) <=> $callable($b);
         };
     }
 

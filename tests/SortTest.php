@@ -4,7 +4,6 @@ namespace Tuck\Sort\Tests;
 
 use ArrayIterator;
 use DateTime;
-use Tuck\Sort\Compare;
 use Tuck\Sort\Sort;
 use PHPUnit\Framework\TestCase;
 
@@ -132,7 +131,7 @@ class SortTest extends TestCase
         $x = ['derp', 'so', 'foods', 'dat'];
 
         $comparison = function ($a, $b) {
-            return Compare::loose(strlen($a), strlen($b));
+            return strlen($a) <=> strlen($b);
         };
 
         $this->assertSame(
@@ -147,7 +146,7 @@ class SortTest extends TestCase
         $x = ['derp', 'so', 'foods', 'dat'];
 
         $comparison = function ($a, $b) {
-            return Compare::loose(strlen($a), strlen($b));
+            return strlen($a) <=> strlen($b);
         };
 
         $this->assertSame(
