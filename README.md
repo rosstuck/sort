@@ -1,4 +1,5 @@
 # Tuck\Sort
+![Badge](https://travis-ci.org/rosstuck/sort.svg?branch=master)
 
 Syntactic sugar for PHP's built in sorting.
 
@@ -195,7 +196,7 @@ $sortChain = Sort::chain()
 
 ```
 
-Once you've created your sorting chain, you can apply it to keys or values. Features like Iterator support, returned values, and PRESERVE_KEY flag are all supported are all supported.
+Once you've created your sorting chain, you can apply it to keys or values. Features like Iterator support, returned values, and PRESERVE_KEY flag are all supported.
 
 ```php
 $sortChain->values(['foo', 'bar']);
@@ -227,12 +228,6 @@ if ($options['sort_by_name']) {
 ```
 
 However, if use the chain before any sorts are added, then the order is essentially random and decided by your PHP runtime (PHP 5.x vs PHP 7 vs HHVM). There's no easy way to normalize this (I've tried) but it varies based on the runtime, the number of elements in the array, the sorting algorithm used, etc. The good news is it doesn't matter if the elements are random because there was nothing worth sorting by anyways! :)
-
-## Roadmap
-
-- Need to investigate supporting native sort flags
-- Could add support for the "reverse" sorting functions to get some minor speedgains.
-- Standard functions instead of namespaced ones could be nice, will probably wait for function autoloading
 
 ## License
 
